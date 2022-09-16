@@ -1,6 +1,6 @@
 # Promotion-Code-App
 
-In this project created simple CURD using Angular for frontend , NodeJs for backend.It has complete functionality like serach , filter , pagination , 
+In this project created simple CURD using Angular for frontend , NodeJs for backend with MongoDB database.It has complete functionality like serach , filter , pagination , 
 add, edit delete etc.
 
 For Running Client Repo
