@@ -1,0 +1,41 @@
+table {
+    width: 100%;
+  }
+  
+
+  .promotion-code{
+    h1{
+      font-weight: bold;
+      margin: 20px 0px;
+      font-size: 28px;
+    }
+
+    .heading-line{
+      height: 5px;
+      width: 100%;
+      background: #000;
+      margin-bottom: 20px;
+    }
+
+    .sub-title{
+      font-weight: 500;
+      font-size: 18px;
+    }
+
+    .mat-header-cell{
+      font-size: 14px;
+      background: #000;
+      color: #fff;
+    }
+
+  }
+
+  .add-form-dialog {
+    width: 800px !important;
+    min-height: auto !important;
+
+    .mat-form-field{
+      width: 100% !important;
+    }
+  }
+

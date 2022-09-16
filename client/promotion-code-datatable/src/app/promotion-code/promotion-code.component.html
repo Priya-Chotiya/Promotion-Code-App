@@ -1,0 +1,251 @@
+<div class="container promotion-code">
+  <h1 class="text-center">Promotion Code</h1>
+  <div class="heading-line"></div>
+
+  <div class="filter-section">
+    <h4 class="sub-title">Search Promotion</h4>
+    <div class="filter row d-flex align-items-center justify-content-between">
+      <div class="col-6 d-flex align-items-center justify-content-start">
+        <form [formGroup]="filterForm" novalidate>
+          <mat-form-field>
+            <mat-label>Status</mat-label>
+            <mat-select
+              formControlName="status"
+              (selectionChange)="onChangeStatus($event.value)"
+            >
+              <mat-option *ngFor="let item of statusData" [value]="item">
+                {{ item }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field class="mx-3">
+            <input
+              matInput
+              type="text"
+              placeholder="Promo Code"
+              formControlName="promotionCode"
+              (keyup)="filterData($event)"
+            />
+          </mat-form-field>
+        </form>
+
+        <button
+          class="ml-2"
+          (click)="resetFilters()"
+          mat-stroked-button
+          color="primary"
+        >
+          Reset Filters
+        </button>
+      </div>
+      <div class="col-6 d-flex flex-row-reverse">
+        <button mat-raised-button (click)="openDialog()" color="primary">
+          <mat-icon>add</mat-icon>
+          Create Promotion
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource">
+      <!-- Position Column -->
+      <ng-container matColumnDef="promotionCode">
+        <th mat-header-cell *matHeaderCellDef>Promotion Code</th>
+        <td mat-cell *matCellDef="let element">{{ element.promotionCode }}</td>
+      </ng-container>
+
+      <!-- Discount Column -->
+      <ng-container matColumnDef="discount">
+        <th mat-header-cell *matHeaderCellDef>Discount</th>
+        <td mat-cell *matCellDef="let element">$ {{ element.discount }}</td>
+      </ng-container>
+
+      <!-- Status Column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let element">{{ element.status }}</td>
+      </ng-container>
+
+      <!-- type Column -->
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef>Type of promotion</th>
+        <td mat-cell *matCellDef="let element">{{ element.type }}</td>
+      </ng-container>
+
+      <!-- startDate Column -->
+      <ng-container matColumnDef="startDate">
+        <th mat-header-cell *matHeaderCellDef>Start date</th>
+        <td mat-cell *matCellDef="let element">{{ element.startDate }}</td>
+      </ng-container>
+      <!-- endDate Column -->
+      <ng-container matColumnDef="endDate">
+        <th mat-header-cell *matHeaderCellDef>End date</th>
+        <td mat-cell *matCellDef="let element">{{ element.endDate }}</td>
+      </ng-container>
+
+      <!-- actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let element">
+          <button
+            mat-icon-button
+            [matMenuTriggerFor]="menu"
+            aria-label="Example icon-button with a menu"
+          >
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button (click)="editData(element)" mat-menu-item>
+              <mat-icon>edit</mat-icon>
+              <span>Edit</span>
+            </button>
+            <button (click)="deleteData(element)" mat-menu-item>
+              <mat-icon>delete</mat-icon>
+              <span>Delete</span>
+            </button>
+          </mat-menu>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+    <p class="text-center p-2" *ngIf="!pageLength">No data found</p>
+    <mat-paginator
+      [length]="pageLength"
+      [pageSize]="options.limit"
+      [pageSizeOptions]="[5, 10, 25, 100]"
+      aria-label="Select page"
+      (page)="onPageChange($event)"
+    >
+    </mat-paginator>
+  </div>
+
+  <!-- Dialog template #2 -->
+  <ng-template #addDataDialog>
+    <div class="container add-form-dialog">
+      <form
+        [formGroup]="addDataForm"
+        class="row"
+        (ngSubmit)="submitForm()"
+        novalidate
+      >
+        <div class="col-md-6 mb-3">
+          <mat-form-field>
+            <input
+              matInput
+              type="text"
+              placeholder="Promotion Code"
+              formControlName="promotionCode"
+            />
+            <!-- error -->
+            <mat-error *ngIf="formError('promotionCode', 'required')">
+              Promotion code is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <mat-form-field>
+            <input
+              matInput
+              type="number"
+              placeholder="Discount"
+              formControlName="discount"
+            />
+            <!-- error -->
+            <mat-error *ngIf="formError('discount', 'required')">
+              Discount is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <mat-form-field>
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status">
+              <mat-option [value]="item" *ngFor="let item of statusData"
+                >{{ item }}
+              </mat-option>
+            </mat-select>
+
+            <mat-error *ngIf="formError('status', 'required')">
+              Status is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <mat-form-field>
+            <input
+              matInput
+              type="text"
+              placeholder="Type"
+              formControlName="type"
+            />
+            <!-- error -->
+            <mat-error *ngIf="formError('type', 'required')">
+              Type is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <mat-form-field>
+            <input
+              matInput
+              readonly
+              [matDatepicker]="picker"
+              placeholder="Start date"
+              formControlName="startDate"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+
+            <!-- error -->
+            <mat-error *ngIf="formError('startDate', 'required')">
+              Startdate is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <mat-form-field>
+            <input
+              matInput
+              readonly
+              [matDatepicker]="picker2"
+              placeholder="End date"
+              formControlName="endDate"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker2"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+
+            <!-- error -->
+            <mat-error *ngIf="formError('endDate', 'required')">
+              Enddate is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="button-wrapper col-12">
+          <button
+            mat-flat-button
+            color="primary"
+            [disabled]="!addDataForm.valid"
+            type="submit"
+          >
+            Submit
+          </button>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+</div>
